@@ -1,0 +1,55 @@
+name: CI/CD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  push-docker-image-arm:
+    environment: "protected branches"
+    runs-on: arc-runner-langfuse
+    env:
+      REGISTRY: registry.cluster.megaver.se
+      IMAGE_NAME: ${{ github.repository }}
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.HARBOR_USERNAME_ROBOT_GITHUB }}
+          password: ${{ secrets.HARBOR_TOKEN_ROBOT_GITHUB }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{version}}-arm
+            type=semver,pattern={{major}}.{{minor}}-arm
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          network: host
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
