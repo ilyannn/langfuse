@@ -10,10 +10,6 @@ ARG SALT
 RUN apk update && apk upgrade --no-cache libcrypto3 libssl3 libc6-compat
 
 FROM base AS deps
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG SALT
 
 WORKDIR /app
 
@@ -29,10 +25,10 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG SALT
+ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+ARG NEXTAUTH_SECRET=secret
+ARG NEXTAUTH_URL=http://localhost:3030
+ARG SALT=salt
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -54,10 +50,10 @@ RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG SALT
+ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+ARG NEXTAUTH_SECRET=secret
+ARG NEXTAUTH_URL=http://localhost:3030
+ARG SALT=salt
 
 RUN apk add --no-cache dumb-init
 
