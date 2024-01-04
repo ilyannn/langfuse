@@ -24,7 +24,7 @@ jobs:
       - name: install dependencies
         run: |
           npm ci
-      - name: Load CI env
+      - name: Load default env
         run: |
           cp .env.dev.example .env
       - name: lint
@@ -32,30 +32,18 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:latest
+        image: postgres
         env:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       matrix:
         node-version: [18, 20]
     steps:
-      - name: Check whether Postgres is available
-        run: |
-          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -67,7 +55,7 @@ jobs:
         run: |
           npm ci
 
-      - name: Load CI env
+      - name: Load default env
         run: |
           cp .env.dev.example .env
 
@@ -86,30 +74,18 @@ jobs:
 
   tests-arm:
     runs-on: arc-runner-langfuse
-
-    services:
+    services:       
       postgres:
-        image: postgres:latest
+        image: postgres
         env:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       matrix:
         node-version: [18, 20]
     steps:
-      - name: Check whether Postgres is available
-        run: |
-          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -121,7 +97,7 @@ jobs:
         run: |
           npm ci
 
-      - name: Load CI env
+      - name: Load default env
         run: |
           cp .env.dev.example .env
 
@@ -141,27 +117,15 @@ jobs:
         
   e2e-tests:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:latest
+        image: postgres
         env:
-          POSTGRES_DB: postgres       
-          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Check whether Postgres is available
-        run: |
-          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -172,7 +136,7 @@ jobs:
         run: |
           npm ci
 
-      - name: Load CI env
+      - name: Load default env
         run: |
           cp .env.dev.example .env
 
@@ -191,27 +155,15 @@ jobs:
 
   e2e-tests-arm:
     runs-on: arc-runner-langfuse
-
     services:
       postgres:
-        image: postgres:latest
+        image: postgres
         env:
-          POSTGRES_DB: postgres       
-          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Check whether Postgres is available
-        run: |
-          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
-
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -222,7 +174,7 @@ jobs:
         run: |
           npm ci
 
-      - name: Load CI env
+      - name: Load default env
         run: |
           cp .env.dev.example .env
 
