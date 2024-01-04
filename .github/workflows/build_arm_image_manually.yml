@@ -2,6 +2,9 @@ name: CI/CD
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "ilya/manual-docker-build"
 
 jobs:
   push-docker-image-arm:
