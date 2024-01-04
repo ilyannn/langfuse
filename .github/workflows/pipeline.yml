@@ -24,9 +24,9 @@ jobs:
       - name: install dependencies
         run: |
           npm ci
-      - name: Load default env
+      - name: Load CI env
         run: |
-          cp .env.dev.example .env
+          cp .env.ci.example .env
       - name: lint
         run: npm run lint
 
@@ -37,7 +37,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: langfuse-test        
+          POSTGRES_DB: postgres        
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
@@ -62,9 +62,9 @@ jobs:
         run: |
           npm ci
 
-      - name: Load default env
+      - name: Load CI env
         run: |
-          cp .env.dev.example .env
+          cp .env.ci.example .env
 
       - name: Run, migrate, seed DB
         run: |
@@ -86,7 +86,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: langfuse-test        
+          POSTGRES_DB: postgres       
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
@@ -111,9 +111,9 @@ jobs:
         run: |
           npm ci
 
-      - name: Load default env
+      - name: Load CI env
         run: |
-          cp .env.dev.example .env
+          cp .env.ci.example .env
 
       - name: Run, migrate, seed DB
         run: |
@@ -136,7 +136,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: langfuse-test        
+          POSTGRES_DB: postgres       
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
@@ -157,9 +157,9 @@ jobs:
         run: |
           npm ci
 
-      - name: Load default env
+      - name: Load CI env
         run: |
-          cp .env.dev.example .env
+          cp .env.ci.example .env
 
       - name: Run, migrate, seed DB
         run: |
@@ -181,7 +181,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: langfuse-test        
+          POSTGRES_DB: postgres       
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
@@ -202,9 +202,9 @@ jobs:
         run: |
           npm ci
 
-      - name: Load default env
+      - name: Load CI env
         run: |
-          cp .env.dev.example .env
+          cp .env.ci.example .env
 
       - name: Run, migrate, seed DB
         run: |
