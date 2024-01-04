@@ -51,6 +51,11 @@ jobs:
       matrix:
         node-version: [18, 20]
     steps:
+      - name: Check whether Postgres is available
+        run: |
+          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -100,6 +105,11 @@ jobs:
       matrix:
         node-version: [18, 20]
     steps:
+      - name: Check whether Postgres is available
+        run: |
+          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -147,6 +157,11 @@ jobs:
           --health-retries 5
 
     steps:
+      - name: Check whether Postgres is available
+        run: |
+          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -192,6 +207,11 @@ jobs:
           --health-retries 5
 
     steps:
+      - name: Check whether Postgres is available
+        run: |
+          DB_HOST=localhost bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+          DB_HOST=postgres bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${DB_HOST}/5432 || echo "${DB_HOST} is not accessible"'
+
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
