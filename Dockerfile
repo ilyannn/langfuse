@@ -1,9 +1,5 @@
 # Base image
 FROM node:20-alpine AS base
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG SALT
 
 # It's important to update the index before installing packages to ensure you're getting the latest versions.
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
@@ -25,10 +21,6 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
-ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
-ARG NEXTAUTH_SECRET=secret
-ARG NEXTAUTH_URL=http://localhost:3030
-ARG SALT=salt
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -46,15 +38,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN npx prisma generate
 
 # Build the application
-RUN npm run build
+RUN DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres \
+    NEXTAUTH_SECRET=secret \
+    NEXTAUTH_URL=http://localhost:3030 \
+    SALT=salt \
+    npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
-ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
-ARG NEXTAUTH_SECRET=secret
-ARG NEXTAUTH_URL=http://localhost:3030
-ARG SALT=salt
-
 RUN apk add --no-cache dumb-init
 
 WORKDIR /app
